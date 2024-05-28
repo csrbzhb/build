@@ -81,10 +81,10 @@ diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
 index 1b390d934ca9..57c1e65bfcfd 100644
 --- a/drivers/extcon/Makefile
 +++ b/drivers/extcon/Makefile
-@@ -25,3 +25,4 @@ obj-$(CONFIG_EXTCON_RTK_TYPE_C) += extcon-rtk-type-c.o
+@@ -25,3 +25,4 @@ obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
+ obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
  obj-$(CONFIG_EXTCON_USBC_CROS_EC) += extcon-usbc-cros-ec.o
  obj-$(CONFIG_EXTCON_USBC_TUSB320) += extcon-usbc-tusb320.o
- obj-$(CONFIG_EXTCON_RTK_TYPE_C) += extcon-rtk-type-c.o
 +obj-$(CONFIG_EXTCON_USBC_VIRTUAL_PD) += extcon-usbc-virtual-pd.o
 diff --git a/drivers/extcon/extcon-usbc-virtual-pd.c b/drivers/extcon/extcon-usbc-virtual-pd.c
 new file mode 100644
@@ -240,7 +240,7 @@ index 000000000000..e0713670e33d
 +
 +	vpd->data_role = vpd_extcon_data_role(vpd);
 +
-+	vpd->det_gpio = devm_gpiod_get_optional(dev, "det", GPIOD_OUT_LOW);
++	vpd->det_gpio = devm_gpiod_get_optional(dev, "det", GPIOD_IN);
 +	if (IS_ERR(vpd->det_gpio)) {
 +		ret = PTR_ERR(vpd->det_gpio);
 +		dev_warn(dev, "failed to get det gpio: %d\n", ret);
