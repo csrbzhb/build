@@ -1,14 +1,14 @@
-From 4b4e0e142b5b137ee21c0e479c35ebc1869cdf18 Mon Sep 17 00:00:00 2001
+From 2851024ff0681ebf012ad8995d3849bb06f7ebc6 Mon Sep 17 00:00:00 2001
 From: rubin <rubin@126.com>
-Date: Mon, 27 May 2024 03:40:42 +0000
+Date: Fri, 31 May 2024 02:22:35 +0000
 Subject: [PATCH] general-modify-edp-panel
 
 ---
- drivers/gpu/drm/panel/panel-edp.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/gpu/drm/panel/panel-edp.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 70feee787611..a4eb9ccc4edd 100644
+index 70feee787611..a307fe79f2cf 100644
 --- a/drivers/gpu/drm/panel/panel-edp.c
 +++ b/drivers/gpu/drm/panel/panel-edp.c
 @@ -778,6 +778,7 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
@@ -19,7 +19,7 @@ index 70feee787611..a4eb9ccc4edd 100644
  	drm_edid_decode_panel_id(panel_id, vend, &product_id);
  
  	panel->detected_panel = find_edp_panel(panel_id);
-@@ -1722,6 +1723,33 @@ static const struct panel_desc starry_kr122ea0sra = {
+@@ -1722,6 +1723,31 @@ static const struct panel_desc starry_kr122ea0sra = {
  		.unprepare = 10 + 500,
  	},
  };
@@ -33,27 +33,25 @@ index 70feee787611..a4eb9ccc4edd 100644
 +	.vsync_start = 900 + 60,
 +	.vsync_end = 900 + 60 + 20,
 +	.vtotal = 900 + 60 + 20 + 80,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_INTERLACE,
 +};
 +
 +static const struct panel_desc xiyun_unknownpanel = {
 +	.modes = &xiyun_unknownpanel_mode,
 +	.num_modes = 1,
 +	.size = {
-+		.width = 145,
-+		.height = 92,
++		.width = 270,
++		.height = 150,
 +	},
 +	.delay = {
-+		/* TODO: should be hpd-absent and no-hpd should be set? */
-+		.hpd_reliable = 200 + 200,
 +		.enable = 200,
-+		.unprepare = 200 + 500,
++		.prepare_to_enable = 500,
 +	},
 +};
  
  static const struct of_device_id platform_of_match[] = {
  	{
-@@ -1811,6 +1839,9 @@ static const struct of_device_id platform_of_match[] = {
+@@ -1811,6 +1837,9 @@ static const struct of_device_id platform_of_match[] = {
  	}, {
  		.compatible = "starry,kr122ea0sra",
  		.data = &starry_kr122ea0sra,
