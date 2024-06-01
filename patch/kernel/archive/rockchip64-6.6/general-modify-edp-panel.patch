@@ -33,7 +33,7 @@ index 70feee787611..a307fe79f2cf 100644
 +	.vsync_start = 900 + 60,
 +	.vsync_end = 900 + 60 + 20,
 +	.vtotal = 900 + 60 + 20 + 80,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_INTERLACE,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
 +};
 +
 +static const struct panel_desc xiyun_unknownpanel = {
