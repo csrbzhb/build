@@ -1,57 +1,46 @@
-From 2851024ff0681ebf012ad8995d3849bb06f7ebc6 Mon Sep 17 00:00:00 2001
+From 51084b3270d17f0d75893329737e5baf48a040bc Mon Sep 17 00:00:00 2001
 From: rubin <rubin@126.com>
-Date: Fri, 31 May 2024 02:22:35 +0000
+Date: Mon, 3 Jun 2024 02:04:39 +0000
 Subject: [PATCH] general-modify-edp-panel
 
 ---
- drivers/gpu/drm/panel/panel-edp.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/gpu/drm/panel/panel-edp.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 70feee787611..a307fe79f2cf 100644
+index 70feee787611..bff2b28ba6f9 100644
 --- a/drivers/gpu/drm/panel/panel-edp.c
 +++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -778,6 +778,7 @@ static int generic_edp_panel_probe(struct device *dev, struct panel_edp *panel)
- 		ret = -EIO;
- 		goto exit;
- 	}
-+	dev_info(dev, "get edp panel EDID=%x\n",panel_id);
- 	drm_edid_decode_panel_id(panel_id, vend, &product_id);
- 
- 	panel->detected_panel = find_edp_panel(panel_id);
-@@ -1722,6 +1723,31 @@ static const struct panel_desc starry_kr122ea0sra = {
+@@ -1722,6 +1722,28 @@ static const struct panel_desc starry_kr122ea0sra = {
  		.unprepare = 10 + 500,
  	},
  };
 +static const struct drm_display_mode xiyun_unknownpanel_mode = {
-+	.clock = 96000,
++	.clock = 97760,
 +	.hdisplay = 1600,
-+	.hsync_start = 1600 + 148,
-+	.hsync_end = 1600 + 148 + 80,
-+	.htotal = 1600 + 148 + 80 + 180,
++	.hsync_start = 1600 + 48,
++	.hsync_end = 1600 + 48 + 32,
++	.htotal = 1600 + 48 + 32 + 80,
 +	.vdisplay = 900,
-+	.vsync_start = 900 + 60,
-+	.vsync_end = 900 + 60 + 20,
-+	.vtotal = 900 + 60 + 20 + 80,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++	.vsync_start = 900 + 3,
++	.vsync_end = 900 + 3 + 5,
++	.vtotal = 900 + 3 + 5 + 18,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC ,
 +};
 +
 +static const struct panel_desc xiyun_unknownpanel = {
 +	.modes = &xiyun_unknownpanel_mode,
 +	.num_modes = 1,
++	.bpc = 8,
 +	.size = {
-+		.width = 270,
++		.width = 260,
 +		.height = 150,
-+	},
-+	.delay = {
-+		.enable = 200,
-+		.prepare_to_enable = 500,
 +	},
 +};
  
  static const struct of_device_id platform_of_match[] = {
  	{
-@@ -1811,6 +1837,9 @@ static const struct of_device_id platform_of_match[] = {
+@@ -1811,6 +1833,9 @@ static const struct of_device_id platform_of_match[] = {
  	}, {
  		.compatible = "starry,kr122ea0sra",
  		.data = &starry_kr122ea0sra,

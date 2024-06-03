@@ -1,0 +1,27 @@
+From 43a58c9e2ccfb75d876864c540c31a343de12b0a Mon Sep 17 00:00:00 2001
+From: rubin <rubin@126.com>
+Date: Mon, 3 Jun 2024 02:00:35 +0000
+Subject: [PATCH 3/3] gerenal-add-edp-support-psr-config
+
+---
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index df9370e0ff23..d866595f17a7 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -108,6 +108,10 @@ static bool analogix_dp_detect_sink_psr(struct analogix_dp_device *dp)
+ {
+ 	unsigned char psr_version;
+ 	int ret;
++	if (!device_property_read_bool(dp->dev, "support-psr")) {
++		dev_err(dp->dev, "no support PSR version, disable it\n");
++		return false;
++	}
+ 
+ 	ret = drm_dp_dpcd_readb(&dp->aux, DP_PSR_SUPPORT, &psr_version);
+ 	if (ret != 1) {
+-- 
+2.30.2
+

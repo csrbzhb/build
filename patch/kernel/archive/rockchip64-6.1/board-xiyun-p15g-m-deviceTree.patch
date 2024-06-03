@@ -1,12 +1,12 @@
-From c77a4433c4be4e7eddd5a39d85a506f837555e8f Mon Sep 17 00:00:00 2001
+From 49788316209e5b5fd06cfc90ce6a5a42dc44d30a Mon Sep 17 00:00:00 2001
 From: rubin <rubin@126.com>
-Date: Mon, 27 May 2024 03:40:09 +0000
-Subject: [PATCH] board-xiyun-p15g-m-deviceTree
+Date: Mon, 3 Jun 2024 01:53:08 +0000
+Subject: [PATCH 1/3] board-xiyun-p15g-m-deviceTree
 
 ---
  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3399-xiyun-p15g-m.dts | 604 ++++++++++++++++++
- 2 files changed, 605 insertions(+)
+ .../boot/dts/rockchip/rk3399-xiyun-p15g-m.dts | 643 ++++++++++++++++++
+ 2 files changed, 644 insertions(+)
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-xiyun-p15g-m.dts
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
@@ -23,10 +23,10 @@ index e7728007fd1b..136d7cc0a7ab 100644
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3566-anbernic-rg353ps.dtb
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-xiyun-p15g-m.dts b/arch/arm64/boot/dts/rockchip/rk3399-xiyun-p15g-m.dts
 new file mode 100644
-index 000000000000..08c398d3f6be
+index 000000000000..4d29a29f0e70
 --- /dev/null
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-xiyun-p15g-m.dts
-@@ -0,0 +1,604 @@
+@@ -0,0 +1,643 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
@@ -130,7 +130,7 @@ index 000000000000..08c398d3f6be
 +	edp_panel: edp-panel {
 +		compatible = "xiyun,unknown-panel";
 +		backlight = <&backlight>;
-+		no-hpd;
++		// no-hpd;
 +		enable-gpios = <&gpio4 RK_PC5 GPIO_ACTIVE_HIGH>;//0x15->21 16c0 17c1 18c2 19c3 20c4  21c5
 +		// pinctrl-names = "default";
 +		// pinctrl-0 = <&lcd_panel_reset>;
@@ -139,36 +139,20 @@ index 000000000000..08c398d3f6be
 +		power-supply = <&vcc3v3_s0>;
 +		status = "okay";
 +
-+		panel-timing {
-+            native-mode = <&timing0>;
-+            timing0: timing0 {
-+                clock-frequency = <96000000>;
-+                hactive = <1600>;
-+                vactive = <900>;
-+                hfront-porch = <148>;
-+                hsync-len = <80>;
-+                hback-porch = <180>;
-+                vfront-porch = <60>;
-+                vsync-len = <20>;
-+                vback-porch = <80>;
-+                hsync-active = <0>;
-+                vsync-active = <0>;
-+                de-active = <0>;
-+                pixelclk-active = <0>;
-+            };
-+        };
 +		port {
 +			panel_in_edp: endpoint {
 +				remote-endpoint = <&edp_out_panel>;
 +			};
 +		};
++		
 +	};
 +/* 配置VPD驱动，用于发送通知给Type-C PHY驱动和DP驱动，以配置DP 4 lanes */
 +	vpd0: virtual-pd {
 +		compatible = "linux,extcon-usbc-virtual-pd";
 +                pinctrl-names = "default";
 +                pinctrl-0 = <&vpd0_int>;
-+		det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>; ////1d->29  24d0 25d1 26d2 27d3 28d4 29d5 gpio4
++		det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>; ////1d->29  24d0 25d1 26d2 27d3 28d4 29d5 gpio4  IRQ_TYPE_EDGE_BOTH GPIO_SINGLE_ENDED
++		//GPIO_ACTIVE_LOW用来表示输出，低电平有效。GPIO_SINGLE_ENDED这个应该是表示输入的。
 +		vpd-data-role = "display-port";
 +		vpd-super-speed;
 +		status = "okay";
@@ -289,6 +273,32 @@ index 000000000000..08c398d3f6be
 +				default-state = "on";
 +		};
 +	};
++//rockchip的wifi 和蓝牙在linux上不用rockchip的机制了。见后面
++	// wireless-wlan {
++	// 	compatible = "wlan-platdata";
++	// 	rockchip,grf = <&grf>;
++	// 	wifi_chip_type = "ap6354";
++	// 	sdio_vref = <1800>;
++	// 	//WIFI,poweren_gpio = <&gpio0 10 GPIO_ACTIVE_HIGH>;
++	// 	WIFI,host_wake_irq = <&gpio0 3 GPIO_ACTIVE_HIGH>; /* GPIO0_a3 */
++	// 	status = "okay";
++	// };
++
++	// wireless-bluetooth {
++	// 	compatible = "bluetooth-platdata";
++	// 	clocks = <&rk808 1>;
++	// 	clock-names = "ext_clock";
++	// 	//wifi-bt-power-toggle;
++	// 	uart_rts_gpios = <&gpio2 19 GPIO_ACTIVE_LOW>; /* GPIO2_C3 */
++	// 	pinctrl-names = "default", "rts_gpio";
++	// 	pinctrl-0 = <&uart0_rts>;
++	// 	pinctrl-1 = <&uart0_gpios>;
++	// 	//BT,power_gpio  = <&gpio3 19 GPIO_ACTIVE_HIGH>; /* GPIOx_xx */
++	// 	BT,reset_gpio    = <&gpio0 9 GPIO_ACTIVE_HIGH>; /* GPIO0_B1 */
++	// 	BT,wake_gpio     = <&gpio2 26 GPIO_ACTIVE_HIGH>; /* GPIO2_D2 */
++	// 	BT,wake_host_irq = <&gpio0 4 GPIO_ACTIVE_HIGH>; /* GPIO0_A4 */
++	// 	status = "okay";
++	// };
 +};
 +
 +&edp {
@@ -343,7 +353,7 @@ index 000000000000..08c398d3f6be
 +&cdn_dp{
 +	status = "okay";
 +	extcon = <&vpd0>;
-+	phys = <&tcphy1_dp>;
++	// phys = <&tcphy1_dp>;
 +	dp_vop_sel = <1>;
 +};
 +
@@ -367,8 +377,8 @@ index 000000000000..08c398d3f6be
 +		reg = <0x11>;
 +		clocks = <&cru SCLK_I2S_8CH_OUT>;
 +		clock-names = "mclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s_8ch_mclk>;
++		// pinctrl-names = "default";
++		// pinctrl-0 = <&i2s_8ch_mclk>;
 +		spk-con-gpio = <&gpio0 RK_PB3 GPIO_ACTIVE_HIGH>;//b->11 8b0 9b1 10b2 11b3 gpio0 
 +		hp-det-gpio = <&gpio4 RK_PD4 GPIO_ACTIVE_HIGH>;//1c->28 24pd0 25pd1 26pd2 27pd3 28pd4 gpio4
 +		status = "okay";
@@ -531,12 +541,27 @@ index 000000000000..08c398d3f6be
 +};
 +
 +&pinctrl {
-+	sdio-pwrseq {
++	wifi {
 +		wifi_enable_h: wifi-enable-h {
 +			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
++		wifi_host_wake_l: wifi-host-wake-l {
++			rockchip,pins = <0 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
 +	};
++	bt {
++		bt_enable_h: bt-enable-h {
++			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
 +
++		bt_host_wake_l: bt-host-wake-l {
++			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		bt_wake_l: bt-wake-l {
++			rockchip,pins = <2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
 +	lcd-panel {
 +		lcd_panel_reset: lcd-panel-reset {
 +			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_up>;
@@ -571,28 +596,9 @@ index 000000000000..08c398d3f6be
 +							0 RK_PA2 0 &pcfg_pull_none
 +							2 RK_PD3 0 &pcfg_pull_none
 +							4 RK_PD3 0 &pcfg_pull_none>;
-+//24 PD0 25 PD1 26 PD2 27 PD3
-+		};
++		};//24 PD0 25 PD1 26 PD2 27 PD3
 +
-+	};
 +
-+	wireless-bluetooth {
-+		uart0_gpios: uart0-gpios {
-+			rockchip,pins =
-+				<2 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		bt_reset_gpio: bt-reset-gpio {
-+			rockchip,pins =
-+				<0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		bt_wake_gpio: bt-wake-gpio {
-+			rockchip,pins =
-+				<2 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		bt_irq_gpio: bt-irq-gpio {
-+			rockchip,pins =
-+				<0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
 +	};
 +
 +	vcc_phy {
@@ -622,6 +628,39 @@ index 000000000000..08c398d3f6be
 +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
 +	sd-uhs-sdr104;
 +	status = "okay";
++};
++&sdio0 {
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	brcmf: wifi@1 {
++		compatible = "brcm,bcm4329-fmac";
++		reg = <1>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA3 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "host-wake";
++		pinctrl-names = "default";
++		pinctrl-0 = <&wifi_host_wake_l>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm4345c5";
++		clocks = <&rk808 1>;
++		clock-names = "lpo";
++		device-wakeup-gpios = <&gpio2 RK_PD2 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
++		max-speed = <1500000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
++		vbat-supply = <&vcc3v3_sys>;
++		vddio-supply = <&vcc_1v8>;
++	};
 +};
 +
 +&spdif {
