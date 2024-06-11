@@ -10,6 +10,7 @@ apt install /root/qq.deb -y
 apt install /root/wechat.deb -y
 apt install /root/wps.deb -y
 
+snap install chromium
 rm /root/qq.deb -rf
 rm /root/wechat.deb -rf
 rm /root/wps.deb -rf
