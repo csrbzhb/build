@@ -1,0 +1,15 @@
+#!/bin/bash
+QQ_PACKAGE=https://dldir1.qq.com/qqfile/qq/QQNT/Linux/QQ_3.2.8_240520_arm64_01.deb
+WECHAT_PKG=http://b70.husbin.top:8095/s/NEtrQHpBAFKCigk/download/wechat-beta_1.0.0.150_arm64.deb
+WPS_PKG=http://b70.husbin.top:8095/s/Wm6LiT2KJSrYLmz/download/wps-office_11.1.0.11719_arm64.deb
+
+wget $QQ_PACKAGE -O /root/qq.deb
+wget $WECHAT_PKG -O /root/wechat.deb
+wget $WPS_PKG -O /root/wps.deb
+apt install /root/qq.deb -y
+apt install /root/wechat.deb -y
+apt install /root/wps.deb -y
+
+rm /root/qq.deb -rf
+rm /root/wechat.deb -rf
+rm /root/wps.deb -rf
