@@ -52,6 +52,10 @@ on:
           - xfce
           - i3-wm
           - kde-plasma
+          - kde-neon
+          - mate
+          - xmonad
+          - all
       armbian_storage:
         description: "Select image storage type."
         required: false
@@ -112,21 +116,45 @@ jobs:
               fi
           else
               if [ ${{ inputs.armbian_board }} == 'all' ]; then
-
-                  for mdev in "rk3568-sv" "caimore-59f" "rk3568-luban" "maxhub-tw07b" "xiyun-p15g-m"
-                  do
-                      ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${mdev} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
-                         DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
-                         DESKTOP_ENVIRONMENT=${{ inputs.armbian_desktop }} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                         BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
-                         COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
-                  done
+                  if [ ${{ inputs.armbian_desktop }} == 'all' ]; then
+                      for mdsk in "cinnamon" "xfce" "i3-wm" "kde-plasma" "kde-neon" "mate" "xmonad"
+                      do
+                          for mdev in "rk3568-sv" "caimore-59f" "rk3568-luban" "maxhub-tw07b" "xiyun-p15g-m"
+                          do
+                              ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${mdev} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
+                               DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
+                               DESKTOP_ENVIRONMENT=${mdsk} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
+                               BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
+                               COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
+                          done    
+                      done
+                  else
+                      for mdev in "rk3568-sv" "caimore-59f" "rk3568-luban" "maxhub-tw07b" "xiyun-p15g-m"
+                      do
+                            ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${mdev} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
+                             DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
+                             DESKTOP_ENVIRONMENT=${{ inputs.armbian_desktop }} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
+                             BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
+                             COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
+                      done
+                  fi
               else
-                  ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${{ inputs.armbian_board }} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
-                         DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
-                         DESKTOP_ENVIRONMENT=${{ inputs.armbian_desktop }} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                         BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
-                         COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
+                  if [ ${{ inputs.armbian_desktop }} == 'all' ]; then
+                      for mdsk in "cinnamon" "xfce" "i3-wm" "kde-plasma" "kde-neon" "mate" "xmonad"
+                      do
+                          ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${{ inputs.armbian_board }} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
+                                 DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
+                                 DESKTOP_ENVIRONMENT=${ mdsk } DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
+                                 BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
+                                 COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
+                      done
+                  else
+                      ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${{ inputs.armbian_board }} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
+                             DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
+                             DESKTOP_ENVIRONMENT=${{ inputs.armbian_desktop }} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
+                             BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
+                             COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
+                  fi
               fi
           fi
 
