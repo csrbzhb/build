@@ -117,7 +117,7 @@ jobs:
           else
               if [ ${{ inputs.armbian_board }} == 'all' ]; then
                   if [ ${{ inputs.armbian_desktop }} == 'all' ]; then
-                      for mdsk in "budgie" "cinnamon" "xfce" "i3-wm" "kde-plasma" "kde-neon" "mate" "xmonad"
+                      for mdsk in "budgie" "cinnamon" "xfce" "kde-plasma" "kde-neon" "mate" "xmonad"
                       do
                           for mdev in "rk3568-sv" "caimore-59f" "rk3568-luban" "maxhub-tw07b" "xiyun-p15g-m"
                           do
@@ -140,7 +140,7 @@ jobs:
                   fi
               else
                   if [ ${{ inputs.armbian_desktop }} == 'all' ]; then
-                      for mdsk in "budgie" "cinnamon" "xfce" "i3-wm" "kde-plasma" "kde-neon" "mate" "xmonad"
+                      for mdsk in "budgie" "cinnamon" "xfce" "kde-plasma" "kde-neon" "mate" "xmonad"
                       do
                           ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${{ inputs.armbian_board }} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
                                  DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
