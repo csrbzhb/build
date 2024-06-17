@@ -56,6 +56,7 @@ on:
           - mate
           - xmonad
           - all
+          - all2
       armbian_storage:
         description: "Select image storage type."
         required: false
@@ -140,7 +141,16 @@ jobs:
                   fi
               else
                   if [ ${{ inputs.armbian_desktop }} == 'all' ]; then
-                      for mdsk in "budgie" "cinnamon" "xfce" "kde-plasma" "mate" "xmonad"
+                      for mdsk in "budgie" "cinnamon" "xfce"
+                      do
+                          ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${{ inputs.armbian_board }} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
+                                 DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
+                                 DESKTOP_ENVIRONMENT=${mdsk} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
+                                 BUILD_ONLY=default HOST=armbian BUILD_DESKTOP=yes EXPERT=yes KERNEL_CONFIGURE=no \
+                                 COMPRESS_OUTPUTIMAGE="sha" SHARE_LOG=yes
+                      done
+                  elif [ ${{ inputs.armbian_desktop }} == 'all2' ]; then
+                      for mdsk in "kde-plasma" "mate" "xmonad"
                       do
                           ./compile.sh RELEASE=${{ inputs.set_release }} BOARD=${{ inputs.armbian_board }} BRANCH=${{ inputs.armbian_branch }} BUILD_MINIMAL=no \
                                  DESKTOP_APPGROUPS_SELECTED='browsers desktop_tools multimedia' \
