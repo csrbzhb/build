@@ -4,6 +4,8 @@
  *
  */
 
+/dts-v1/;
+
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/pwm/pwm.h>
 #include <dt-bindings/pinctrl/rockchip.h>
@@ -11,6 +13,7 @@
 #include <dt-bindings/display/drm_mipi_dsi.h>
 #include <dt-bindings/display/rockchip_vop.h>
 #include <dt-bindings/sensor-dev.h>
+#include "dt-bindings/usb/pd.h"
 #include "rk3588.dtsi"
 
 / {
@@ -1291,6 +1294,7 @@
 &usbdrd_dwc3_0 {
 	dr_mode = "otg";
 	usb-role-switch;
+	status = "okay";
 	port {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -1299,7 +1303,6 @@
 			remote-endpoint = <&usbc0_role_sw>;
 		};
 	};
-	status = "okay";
 };
 
 &usbdrd_dwc3_1 {
