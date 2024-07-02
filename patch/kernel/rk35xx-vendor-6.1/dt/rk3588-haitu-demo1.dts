@@ -17,8 +17,8 @@
 #include "rk3588.dtsi"
 
 / {
-	model = "HaiTu RK3588 ht Board";
-	compatible = "HaiTu,rk3588-ht", "rockchip,rk3588";
+	model = "HaiTu RK3588 demo1 Board";
+	compatible = "HaiTu,rk3588-demo1", "rockchip,rk3588";
 	
 	chosen: chosen {
 		bootargs = "earlycon=uart8250,mmio32,0xfeb50000 console=ttyFIQ0 irqchip.gicv3_pseudo_nmi=0 clk_gate.always_on=1 pm_domains.always_on=1 root=PARTUUID=614e0000-0000 rw rootwait";
